@@ -64,6 +64,7 @@ const DraggableStates: React.FC = () => {
     };
 
     const handleAddState = async () => {
+        await new Promise((resolve) => setTimeout(resolve, 500));
         const newId = Math.random().toString(36).substr(2, 9);
         const newIndex = states.length + 1;
 
@@ -74,6 +75,7 @@ const DraggableStates: React.FC = () => {
 
     const handleDeleteState = async (id: string) => {
         setIsLoading(true);
+        await new Promise((resolve) => setTimeout(resolve, 500));
         const updatedStates = states.filter(state => state.id !== id);
         const reorderedStates = updatedStates.map((state, index) => ({
             ...state,
@@ -85,6 +87,7 @@ const DraggableStates: React.FC = () => {
     }
 
     const handleAddVariant = async () => {
+        await new Promise((resolve) => setTimeout(resolve, 500));
         const updatedStates = states.map(state => ({
             ...state,
             variants: [...state.variants, { imageUrl: "", imageCaption: "" }]
@@ -95,6 +98,7 @@ const DraggableStates: React.FC = () => {
 
     const handleVariantChange = async (stateId: string, variantIndex: number, variant: Variant) => {
         setIsLoading(true);
+        await new Promise((resolve) => setTimeout(resolve, 500));
         setStates(prevStates => 
             prevStates.map(state => {
                 if (state.id === stateId) {
