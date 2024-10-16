@@ -3,21 +3,14 @@
 import { useEffect, useState, useRef } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult, DroppableProps } from 'react-beautiful-dnd';
 import { TbGridDots } from "react-icons/tb";
-import AddItem from './AddItem';
-import { showCustomAlert } from './CustomAlert';
+import AddItem from './ui/AddItem';
+import { showCustomAlert } from './ui/CustomAlert';
 import { FiTrash2 } from "react-icons/fi";
 import { State, Variant } from '../types';
 import ScrollableVariants from './ScrollableVariants';
 import { IoAddOutline } from 'react-icons/io5';
 import { BsThreeDotsVertical } from "react-icons/bs";
-
-const initialStates: State[] = [
-    { id: 'a', index: 1, filters: [{ label: 'onsale', isActive: false }, { label: 'tags', isActive: true }, { label: 'contains', isActive: false }], variants: [{ imageUrl: 'https://images-eu.ssl-images-amazon.com/images/I/71PGrWUKyeL._AC_UL210_SR210,210_.jpg', imageCaption: 'Macus Aurelius - Meditaions' }] },
-    { id: 'b', index: 2, filters: [{ label: 'onsale', isActive: false }, { label: 'tags', isActive: true }, { label: 'contains', isActive: false }], variants: [{ imageUrl: 'https://images-eu.ssl-images-amazon.com/images/I/71PGrWUKyeL._AC_UL210_SR210,210_.jpg', imageCaption: 'Macus Aurelius - Meditaions' }] },
-    { id: 'c', index: 3, filters: [{ label: 'onsale', isActive: false }, { label: 'tags', isActive: true }, { label: 'contains', isActive: false }], variants: [{ imageUrl: 'https://images-eu.ssl-images-amazon.com/images/I/71PGrWUKyeL._AC_UL210_SR210,210_.jpg', imageCaption: 'Macus Aurelius - Meditaions' }] },
-    { id: 'd', index: 4, filters: [{ label: 'onsale', isActive: false }, { label: 'tags', isActive: true }, { label: 'contains', isActive: false }], variants: [{ imageUrl: 'https://images-eu.ssl-images-amazon.com/images/I/71PGrWUKyeL._AC_UL210_SR210,210_.jpg', imageCaption: 'Macus Aurelius - Meditaions' }] },
-    { id: 'e', index: 5, filters: [{ label: 'onsale', isActive: false }, { label: 'tags', isActive: true }, { label: 'contains', isActive: false }], variants: [{ imageUrl: 'https://images-eu.ssl-images-amazon.com/images/I/71PGrWUKyeL._AC_UL210_SR210,210_.jpg', imageCaption: 'Macus Aurelius - Meditaions' }] },
-];
+import { rows } from '../constants';
 
 export const StrictModeDroppable = ({ children, ...props }: DroppableProps) => {
     const [enabled, setEnabled] = useState(false);
@@ -40,8 +33,8 @@ export const StrictModeDroppable = ({ children, ...props }: DroppableProps) => {
 
 
 const DraggableStates: React.FC = () => {
-    const [states, setStates] = useState<State[]>(initialStates);
-    const [isLoading, setIsLoading] = useState<Boolean>(false)
+    const [states, setStates] = useState<State[]>(rows);
+    const [isLoading, setIsLoading] = useState<boolean>(false)
     const headerScrollRef = useRef<HTMLDivElement>(null);
     const contentScrollRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -71,7 +64,6 @@ const DraggableStates: React.FC = () => {
     };
 
     const handleAddState = async () => {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
         const newId = Math.random().toString(36).substr(2, 9);
         const newIndex = states.length + 1;
 
@@ -82,7 +74,6 @@ const DraggableStates: React.FC = () => {
 
     const handleDeleteState = async (id: string) => {
         setIsLoading(true);
-        await new Promise((resolve) => setTimeout(resolve, 500));
         const updatedStates = states.filter(state => state.id !== id);
         const reorderedStates = updatedStates.map((state, index) => ({
             ...state,
@@ -94,7 +85,6 @@ const DraggableStates: React.FC = () => {
     }
 
     const handleAddVariant = async () => {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
         const updatedStates = states.map(state => ({
             ...state,
             variants: [...state.variants, { imageUrl: "", imageCaption: "" }]
@@ -105,7 +95,6 @@ const DraggableStates: React.FC = () => {
 
     const handleVariantChange = async (stateId: string, variantIndex: number, variant: Variant) => {
         setIsLoading(true);
-        await new Promise((resolve) => setTimeout(resolve, 500));
         setStates(prevStates => 
             prevStates.map(state => {
                 if (state.id === stateId) {

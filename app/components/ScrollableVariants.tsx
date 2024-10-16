@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Variant } from "../types";
 import { IoAddOutline } from 'react-icons/io5';
 import { LiaEdit } from "react-icons/lia";
-import AddItem from "./AddItem";
+import AddItem from "./ui/AddItem";
 import InsertDialog from "./InsertDialog";
 
 

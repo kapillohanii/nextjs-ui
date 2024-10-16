@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import Sidebar from "./components/Sidebar";
-import { CustomAlertContainer } from "./components/CustomAlert";
+import Sidebar from "./components/layout/Sidebar";
+import Header from "./components/layout/Header";
+import { CustomAlertContainer } from "./components/ui/CustomAlert";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -33,7 +34,10 @@ export default function RootLayout({
         <div className="flex h-screen">
           <Sidebar />
           <div className="flex-1 overflow-auto">
-            {children}
+            <div className="w-full h-full bg-white px-4 py-2">
+              <Header />
+              {children}
+            </div>
           </div>
         </div>
         <CustomAlertContainer />

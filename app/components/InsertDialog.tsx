@@ -2,69 +2,11 @@ import React from "react";
 import { Dialog, DialogTitle, DialogPanel } from '@headlessui/react';
 import { IoClose } from "react-icons/io5";
 import { IoImageOutline } from "react-icons/io5";
-import { CiSearch } from "react-icons/ci";
 import { Variant } from "../types";
+import { designs } from "../constants";
+import SearchInput from "./ui/SearchInput";
 
 
-
-const designs = [
-  {
-    imageUrl: 'https://d28hgpri8am2if.cloudfront.net/book_images/onix/cvr9781626860605/the-art-of-war-9781626860605_lg.jpg',
-    imageCaption: 'Sun Tzu - Art of War'
-  },
-  {
-    imageUrl: 'https://eastindiapublishing.com/cdn/shop/files/CrimeandPunishment-01.png?v=1706581156',
-    imageCaption: 'Crime and Punishment'
-  },
-  {
-    imageUrl: 'https://m.media-amazon.com/images/I/81tdbrewW0L._AC_UF1000,1000_QL80_.jpg',
-    imageCaption: 'Kafka On The Shore'
-  },
-  {
-    imageUrl: 'https://m.media-amazon.com/images/I/41alKvN9GwL._AC_UF1000,1000_QL80_.jpg',
-    imageCaption: 'No Longer Human'
-  },
-  {
-    imageUrl: 'https://images-eu.ssl-images-amazon.com/images/I/71PGrWUKyeL._AC_UL210_SR210,210_.jpg',
-    imageCaption: 'Macus Aurelius - Meditaions',
-  },
-  {
-    imageUrl: 'https://d28hgpri8am2if.cloudfront.net/book_images/onix/cvr9781626860605/the-art-of-war-9781626860605_lg.jpg',
-    imageCaption: 'Sun Tzu - Art of War'
-  },
-  {
-    imageUrl: 'https://eastindiapublishing.com/cdn/shop/files/CrimeandPunishment-01.png?v=1706581156',
-    imageCaption: 'Crime and Punishment'
-  },
-  {
-    imageUrl: 'https://m.media-amazon.com/images/I/81tdbrewW0L._AC_UF1000,1000_QL80_.jpg',
-    imageCaption: 'Kafka On The Shore'
-  },
-  {
-    imageUrl: 'https://m.media-amazon.com/images/I/41alKvN9GwL._AC_UF1000,1000_QL80_.jpg',
-    imageCaption: 'No Longer Human'
-  },
-  {
-    imageUrl: 'https://images-eu.ssl-images-amazon.com/images/I/71PGrWUKyeL._AC_UL210_SR210,210_.jpg',
-    imageCaption: 'Macus Aurelius - Meditaions',
-  }
-]
-
-
-const SearchInput = () => {
-  return (
-    <div className="relative">
-      <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-        <CiSearch className="h-6 w-6 text-gray-400" />
-      </div>
-      <input
-        type="text"
-        className="w-full pl-10 pr-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-sm"
-        placeholder="Search"
-      />
-    </div>
-  );
-};
 
 const InsertDialog = ({
   isOpen,
@@ -75,6 +17,11 @@ const InsertDialog = ({
   onClose: () => void;
   handleVariantChange: (variant: Variant) => Promise<void>;
 }) => {
+
+  const handleInsert = (design: Variant) => {
+    handleVariantChange({ imageUrl: design.imageUrl, imageCaption: design.imageCaption });
+    onClose();
+  }
   return (
     <Dialog
       open={isOpen}
@@ -106,7 +53,7 @@ const InsertDialog = ({
                   </div>
                 </div>
               </DialogTitle>
-              <div className="border-t p-2 max-h-80 overflow-y-scroll" style={{scrollbarWidth: 'thin'}}>
+              <div className="border-t p-2 max-h-80 overflow-y-scroll" style={{ scrollbarWidth: 'thin' }}>
                 <div className="flex flex-row">
                   {
                     <div className="grid grid-cols-4 gap-4 mt-4">
@@ -121,10 +68,7 @@ const InsertDialog = ({
                             <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                               <button
                                 className="bg-white p-2 w-max rounded-md text-xs"
-                                onClick={() => {
-                                  handleVariantChange({ imageUrl: design.imageUrl, imageCaption: design.imageCaption });
-                                  onClose();
-                                }}>
+                                onClick={() => handleInsert(design)}>
                                 Insert
                               </button>
                             </div>

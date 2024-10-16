@@ -13,7 +13,7 @@ const AddItem: React.FC<AddItemProps> = ({ handleAddItem }) => {
     const onClick = async () => {
         setLoading(true);
         try {
-            if(handleAddItem){
+            if (handleAddItem) {
                 await handleAddItem();
             } else {
                 await new Promise((resolve) => setTimeout(resolve, 2000));
