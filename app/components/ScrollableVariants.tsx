@@ -1,3 +1,4 @@
+import React from "react";
 import { Variant } from "../types";
 import { IoAddOutline } from 'react-icons/io5';
 import { LiaEdit } from "react-icons/lia";
@@ -38,19 +39,30 @@ function VariantItem({ variant }: { variant: Variant }) {
 interface ScrollableVariantsProps {
     variants: Variant[];
     handleAddVariant: () => Promise<void>;
+    onScroll: (e: React.UIEvent<HTMLDivElement>) => void;
 }
 
-export default function ScrollableVariants({ variants, handleAddVariant }: ScrollableVariantsProps) {
-    return (
-        <div className="flex flex-row items-center overflow-x-scroll" style={{ scrollbarWidth: 'none' }}>
-            {variants.map((variant, index) => (
-                <div key={index} className="p-4 border-r border-gray-300">
-                    <VariantItem variant={variant} />
-                </div>
-            ))}
-            <div className="p-4">
-                <AddItem handleAddItem={handleAddVariant} />
+const ScrollableVariants = React.forwardRef<HTMLDivElement, ScrollableVariantsProps>(({ variants, handleAddVariant, onScroll }, ref) => (
+    <div
+        ref={ref}
+        className="flex flex-grow min-w-0 items-center overflow-x-scroll"
+        style={{
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+            WebkitOverflowScrolling: 'touch',
+            width: '100%'
+        }}
+        onScroll={(e) => onScroll(e)}
+    >
+        {variants.map((variant, index) => (
+            <div key={index} className="p-4 border-r border-gray-300">
+                <VariantItem variant={variant} />
             </div>
+        ))}
+        <div className="w-20 items-center justify-center flex flex-shrink-0">
+            <AddItem handleAddItem={handleAddVariant} />
         </div>
-    );
-}
+    </div>
+))
+
+export default ScrollableVariants

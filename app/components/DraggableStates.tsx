@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult, DroppableProps } from 'react-beautiful-dnd';
 import { TbGridDots } from "react-icons/tb";
 import AddItem from '../ui/AddItem';
@@ -41,6 +41,33 @@ export const StrictModeDroppable = ({ children, ...props }: DroppableProps) => {
 
 const DraggableStates: React.FC = () => {
     const [states, setStates] = useState<State[]>(initialStates);
+    const headerScrollRef = useRef<HTMLDivElement>(null);
+    const contentScrollRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+    const handleScroll = (scrollingElement: HTMLDivElement, isHeader: boolean) => {
+        const scrollLeft = scrollingElement.scrollLeft;
+
+        if (isHeader && headerScrollRef.current) {
+            contentScrollRefs.current.forEach(ref => {
+                if (ref && ref !== scrollingElement) {
+                    ref.scrollLeft = scrollLeft;
+                }
+            });
+        } else {
+            if (headerScrollRef.current) {
+                headerScrollRef.current.scrollLeft = scrollLeft;
+            }
+            contentScrollRefs.current.forEach(ref => {
+                if (ref && ref !== scrollingElement) {
+                    ref.scrollLeft = scrollLeft;
+                }
+            });
+        }
+    };
+
+    const setContentScrollRef = (el: HTMLDivElement | null, index: number) => {
+        contentScrollRefs.current[index] = el;
+    };
 
     const handleAddState = async () => {
         await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -89,22 +116,39 @@ const DraggableStates: React.FC = () => {
     };
 
     return (
-        <div className='border border-gray-200 rounded-md bg-[#f9fbfc] px-4 py-8 space-y-4'>
+        <div className='border border-gray-200 rounded-md bg-[#f9fbfc] px-6 py-8 space-y-4'>
             <div className='flex flex-row'>
                 <span className='w-28 flex-shrink-0'></span>
                 <div className='w-80 flex-shrink-0 items-center py-2 border-r border-gray-300 text-center'>
                     <p className='text-gray-500 font-semibold text-sm'>Product Filter</p>
                 </div>
-                <div className='flex flex-grow min-w-0 overflow-x-scroll' style={{ scrollbarWidth: 'none' }}>
-                    {
-                        states.length > 0 &&
-                        states[0].variants.map((variant, index) => (
-                            <div className='flex flex-row w-52 items-center justify-between p-3 border-r border-gray-300 text-center'>
-                                <p className='text-gray-500 font-semibold text-sm'>{index === 0 ? 'Primary Variant' : `Variant ${index + 1}`}</p>
-                                <BsThreeDotsVertical size={16} />
-                            </div>
-                        ))
-                    }
+                <div className='flex-grow relative overflow-hidden'>
+                    <div
+                        ref={headerScrollRef}
+                        className='flex overflow-x-auto scrollbar-hide'
+                        style={{
+                            scrollbarWidth: 'none',
+                            msOverflowStyle: 'none',
+                            WebkitOverflowScrolling: 'touch',
+                            width: '100%'
+                        }}
+                        onScroll={(e) => handleScroll(e.currentTarget, true)}
+                    >
+                        <div className='flex flex-nowrap'>
+                            {states.length > 0 && states[0].variants.map((variant, index) => (
+                                <div 
+                                    key={index}
+                                    className='flex flex-row w-52 flex-shrink-0 items-center justify-between p-3 border-r border-gray-300 text-center'
+                                >
+                                    <p className='text-gray-500 font-semibold text-sm'>
+                                        {index === 0 ? 'Primary Variant' : `Variant ${index + 1}`}
+                                    </p>
+                                    <BsThreeDotsVertical size={16} />
+                                </div>
+                            ))}
+                            <span className='w-20 flex-shrink-0'></span>
+                        </div>
+                    </div>
                 </div>
             </div>
             <DragDropContext onDragEnd={onDragEnd}>
@@ -154,7 +198,7 @@ const DraggableStates: React.FC = () => {
                                                 </div>
                                             </div>
                                             <div className='flex-grow min-w-0'>
-                                                <ScrollableVariants variants={state.variants} handleAddVariant={handleAddVariant} />
+                                                <ScrollableVariants ref={(el) => setContentScrollRef(el, index)} variants={state.variants} handleAddVariant={handleAddVariant} onScroll={(e) => handleScroll(e.currentTarget, false)} />
                                             </div>
 
                                         </div>
