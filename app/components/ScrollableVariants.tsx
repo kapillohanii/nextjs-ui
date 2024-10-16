@@ -18,9 +18,9 @@ function VariantItem({ variant }: { variant: Variant }) {
                                 className="w-full h-full object-none"
                             />
                             <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                <div className="bg-white p-2 w-max rounded-md">
+                                <button className="bg-white p-2 w-max rounded-md">
                                     <LiaEdit className="text-black w-6 h-6" />
-                                </div>
+                                </button>
                             </div>
                         </div>
                         <p className="w-32 truncate text-xs font-semibold">

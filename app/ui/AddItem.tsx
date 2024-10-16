@@ -33,13 +33,13 @@ const AddItem: React.FC<AddItemProps> = ({ handleAddItem }) => {
             disabled={loading}
         >
             {loading ? (
-                <div className="loader"></div>
+                <div className="spinner"></div>
             ) : (
                 <IoAddOutline size={20} />
             )}
 
             <style jsx>{`
-        .loader {
+        .spinner {
           border: 2px solid #fff;
           border-radius: 50%;
           border-top: 2px solid #000;

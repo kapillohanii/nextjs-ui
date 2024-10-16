@@ -41,6 +41,7 @@ export const StrictModeDroppable = ({ children, ...props }: DroppableProps) => {
 
 const DraggableStates: React.FC = () => {
     const [states, setStates] = useState<State[]>(initialStates);
+    const [isLoading, setIsLoading] = useState<Boolean>(false)
     const headerScrollRef = useRef<HTMLDivElement>(null);
     const contentScrollRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -80,6 +81,7 @@ const DraggableStates: React.FC = () => {
     }
 
     const handleDeleteState = async (id: string) => {
+        setIsLoading(true);
         await new Promise((resolve) => setTimeout(resolve, 500));
         const updatedStates = states.filter(state => state.id !== id);
         const reorderedStates = updatedStates.map((state, index) => ({
@@ -87,6 +89,7 @@ const DraggableStates: React.FC = () => {
             index: index + 1,
         }));
         setStates(reorderedStates);
+        setIsLoading(false);
         showCustomAlert('State removed')
     }
 
@@ -117,9 +120,10 @@ const DraggableStates: React.FC = () => {
 
     return (
         <div className='border border-gray-200 rounded-md bg-[#f9fbfc] px-6 py-8 space-y-4'>
+            {isLoading && <div className="loader absolute flex justify-center items-center z-10"></div>}
             <div className='flex flex-row'>
                 <span className='w-28 flex-shrink-0'></span>
-                <div className='w-80 flex-shrink-0 items-center py-2 border-r border-gray-300 text-center'>
+                <div className='w-80 flex-shrink-0 items-center p-3 border-r border-gray-300 text-center'>
                     <p className='text-gray-500 font-semibold text-sm'>Product Filter</p>
                 </div>
                 <div className='flex-grow relative overflow-hidden'>
@@ -136,14 +140,16 @@ const DraggableStates: React.FC = () => {
                     >
                         <div className='flex flex-nowrap'>
                             {states.length > 0 && states[0].variants.map((variant, index) => (
-                                <div 
+                                <div
                                     key={index}
                                     className='flex flex-row w-52 flex-shrink-0 items-center justify-between p-3 border-r border-gray-300 text-center'
                                 >
                                     <p className='text-gray-500 font-semibold text-sm'>
                                         {index === 0 ? 'Primary Variant' : `Variant ${index + 1}`}
                                     </p>
-                                    <BsThreeDotsVertical size={16} />
+                                    <button>
+                                        <BsThreeDotsVertical size={16} />
+                                    </button>
                                 </div>
                             ))}
                             <span className='w-20 flex-shrink-0'></span>
@@ -167,8 +173,13 @@ const DraggableStates: React.FC = () => {
                                             ref={provided.innerRef}
                                             {...provided.draggableProps}
                                             {...provided.dragHandleProps}
+                                            style={{
+                                                ...provided.draggableProps.style,
+                                                cursor: 'default'
+                                            }}
+
                                         >
-                                            <div className="w-28 flex-shrink-0 items-center p-8 border-r border-gray-300">
+                                            <div className="w-28 flex-shrink-0 items-center flex justify-center border-r border-gray-300">
                                                 <div className='flex flex-col items-center'>
                                                     <FiTrash2
                                                         size={20}
