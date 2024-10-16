@@ -1,4 +1,4 @@
-import Logo from "@/app/assets/retain-iq.png"
+import Logo from "@/app/public/assets/retain-iq.png"
 import Image from "next/image";
 import { IconType } from 'react-icons';
 import { IoImageOutline } from "react-icons/io5";

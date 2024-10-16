@@ -28,7 +28,7 @@ const AddItem: React.FC<AddItemProps> = ({ handleAddItem }) => {
 
     return (
         <button
-            className='bg-white p-2 rounded-sm shadow'
+            className='bg-white p-2 rounded-sm shadow w-max h-max'
             onClick={onClick}
             disabled={loading}
         >
