@@ -3,20 +3,20 @@
 import { useEffect, useState, useRef } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult, DroppableProps } from 'react-beautiful-dnd';
 import { TbGridDots } from "react-icons/tb";
-import AddItem from '../ui/AddItem';
-import { showCustomAlert } from '../ui/CustomAlert';
+import AddItem from './AddItem';
+import { showCustomAlert } from './CustomAlert';
 import { FiTrash2 } from "react-icons/fi";
-import { State } from '../types';
+import { State, Variant } from '../types';
 import ScrollableVariants from './ScrollableVariants';
 import { IoAddOutline } from 'react-icons/io5';
 import { BsThreeDotsVertical } from "react-icons/bs";
 
 const initialStates: State[] = [
-    { id: 'a', index: 1, filters: [{ label: 'onsale', isActive: false }, { label: 'tags', isActive: true }, { label: 'contains', isActive: false }], variants: [{ imageUrl: 'https://images-eu.ssl-images-amazon.com/images/I/71PGrWUKyeL._AC_UL210_SR210,210_.jpg', imageCaption: 'macus aurelius - meditaions' }] },
-    { id: 'b', index: 2, filters: [{ label: 'onsale', isActive: false }, { label: 'tags', isActive: true }, { label: 'contains', isActive: false }], variants: [{ imageUrl: 'https://images-eu.ssl-images-amazon.com/images/I/71PGrWUKyeL._AC_UL210_SR210,210_.jpg', imageCaption: 'macus aurelius - meditaions' }] },
-    { id: 'c', index: 3, filters: [{ label: 'onsale', isActive: false }, { label: 'tags', isActive: true }, { label: 'contains', isActive: false }], variants: [{ imageUrl: 'https://images-eu.ssl-images-amazon.com/images/I/71PGrWUKyeL._AC_UL210_SR210,210_.jpg', imageCaption: 'macus aurelius - meditaions' }] },
-    { id: 'd', index: 4, filters: [{ label: 'onsale', isActive: false }, { label: 'tags', isActive: true }, { label: 'contains', isActive: false }], variants: [{ imageUrl: 'https://images-eu.ssl-images-amazon.com/images/I/71PGrWUKyeL._AC_UL210_SR210,210_.jpg', imageCaption: 'macus aurelius - meditaions' }] },
-    { id: 'e', index: 5, filters: [{ label: 'onsale', isActive: false }, { label: 'tags', isActive: true }, { label: 'contains', isActive: false }], variants: [{ imageUrl: 'https://images-eu.ssl-images-amazon.com/images/I/71PGrWUKyeL._AC_UL210_SR210,210_.jpg', imageCaption: 'macus aurelius - meditaions' }] },
+    { id: 'a', index: 1, filters: [{ label: 'onsale', isActive: false }, { label: 'tags', isActive: true }, { label: 'contains', isActive: false }], variants: [{ imageUrl: 'https://images-eu.ssl-images-amazon.com/images/I/71PGrWUKyeL._AC_UL210_SR210,210_.jpg', imageCaption: 'Macus Aurelius - Meditaions' }] },
+    { id: 'b', index: 2, filters: [{ label: 'onsale', isActive: false }, { label: 'tags', isActive: true }, { label: 'contains', isActive: false }], variants: [{ imageUrl: 'https://images-eu.ssl-images-amazon.com/images/I/71PGrWUKyeL._AC_UL210_SR210,210_.jpg', imageCaption: 'Macus Aurelius - Meditaions' }] },
+    { id: 'c', index: 3, filters: [{ label: 'onsale', isActive: false }, { label: 'tags', isActive: true }, { label: 'contains', isActive: false }], variants: [{ imageUrl: 'https://images-eu.ssl-images-amazon.com/images/I/71PGrWUKyeL._AC_UL210_SR210,210_.jpg', imageCaption: 'Macus Aurelius - Meditaions' }] },
+    { id: 'd', index: 4, filters: [{ label: 'onsale', isActive: false }, { label: 'tags', isActive: true }, { label: 'contains', isActive: false }], variants: [{ imageUrl: 'https://images-eu.ssl-images-amazon.com/images/I/71PGrWUKyeL._AC_UL210_SR210,210_.jpg', imageCaption: 'Macus Aurelius - Meditaions' }] },
+    { id: 'e', index: 5, filters: [{ label: 'onsale', isActive: false }, { label: 'tags', isActive: true }, { label: 'contains', isActive: false }], variants: [{ imageUrl: 'https://images-eu.ssl-images-amazon.com/images/I/71PGrWUKyeL._AC_UL210_SR210,210_.jpg', imageCaption: 'Macus Aurelius - Meditaions' }] },
 ];
 
 export const StrictModeDroppable = ({ children, ...props }: DroppableProps) => {
@@ -102,6 +102,26 @@ const DraggableStates: React.FC = () => {
         setStates(updatedStates);
         showCustomAlert('Variant added')
     }
+
+    const handleVariantChange = async (stateId: string, variantIndex: number, variant: Variant) => {
+        setIsLoading(true);
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        setStates(prevStates => 
+            prevStates.map(state => {
+                if (state.id === stateId) {
+                    const updatedVariants = [...state.variants];
+                    updatedVariants[variantIndex] = variant;
+                    return {
+                        ...state,
+                        variants: updatedVariants
+                    };
+                }
+                return state;
+            })
+        );
+        setIsLoading(false);
+        showCustomAlert('Variant template updated');
+    };
 
 
     const onDragEnd = (result: DropResult) => {
@@ -209,7 +229,11 @@ const DraggableStates: React.FC = () => {
                                                 </div>
                                             </div>
                                             <div className='flex-grow min-w-0'>
-                                                <ScrollableVariants ref={(el) => setContentScrollRef(el, index)} variants={state.variants} handleAddVariant={handleAddVariant} onScroll={(e) => handleScroll(e.currentTarget, false)} />
+                                                <ScrollableVariants ref={(el) => setContentScrollRef(el, index)} 
+                                                variants={state.variants} 
+                                                handleAddVariant={handleAddVariant} 
+                                                handleVariantChange={(variantIndex: number ,variant: Variant) => handleVariantChange(state.id, variantIndex, variant)}
+                                                onScroll={(e) => handleScroll(e.currentTarget, false)} />
                                             </div>
 
                                         </div>
