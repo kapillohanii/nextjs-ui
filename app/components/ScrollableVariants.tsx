@@ -18,11 +18,13 @@ function VariantItem({ variant, handleVariantChange }: { variant: Variant, handl
                         ?
                         <>
                             <div className="group relative w-28 h-28 rounded-md overflow-hidden">
+                            {/* eslint-disable @next/next/no-img-element */}
                                 <img
                                     src={variant.imageUrl}
                                     alt="img"
                                     className="w-full h-full object-none"
                                 />
+                            {/* eslint-enable @next/next/no-img-element */}
                                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                     <button className="bg-white p-2 w-max rounded-md" onClick={() => setIsDialogOpen(true)}>
                                         <LiaEdit className="text-black w-6 h-6" />
@@ -55,6 +57,7 @@ interface ScrollableVariantsProps {
     onScroll: (e: React.UIEvent<HTMLDivElement>) => void;
 }
 
+/* eslint-disable react/display-name */
 const ScrollableVariants = React.forwardRef<HTMLDivElement, ScrollableVariantsProps>(({ variants, handleAddVariant, handleVariantChange, onScroll }, ref) => (
     <div
         ref={ref}
@@ -78,4 +81,4 @@ const ScrollableVariants = React.forwardRef<HTMLDivElement, ScrollableVariantsPr
     </div>
 ))
 
-export default ScrollableVariants
+export default ScrollableVariants;

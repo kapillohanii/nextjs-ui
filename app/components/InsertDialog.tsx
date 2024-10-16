@@ -60,11 +60,13 @@ const InsertDialog = ({
                       {designs.map((design, index) => (
                         <div key={index} className="w-32">
                           <div className="group relative w-28 h-28 rounded-md overflow-hidden">
+                            {/* eslint-disable @next/next/no-img-element */}
                             <img
                               src={design.imageUrl}
                               alt="img"
                               className="w-full h-full object-none"
                             />
+                        {/* eslint-enable @next/next/no-img-element */}
                             <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                               <button
                                 className="bg-white p-2 w-max rounded-md text-xs"
